@@ -1,0 +1,9 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation project(':job-kueue-common')
+
+    api 'com.fasterxml.jackson.core:jackson-databind:2.15.3'
+}
