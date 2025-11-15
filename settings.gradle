@@ -1,4 +1,3 @@
 rootProject.name = 'job-kueue'
-include 'job-kueue-api'
-include 'job-kueue-kafka'
+include 'job-kueue-client'
 include 'job-kueue-common'
