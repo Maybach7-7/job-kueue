@@ -1,0 +1,19 @@
+services:
+  database:
+    image: postgres:17
+    container_name: postgres
+    env_file: "db.env"
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  api-client:
+    build:
+      context: .
+      dockerfile: ./job-kueue-client/Dockerfile
+    container_name: client
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    restart: unless-stopped
