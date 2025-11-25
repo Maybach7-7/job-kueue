@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/sql/V001_create_task_types_table.sql
+      relativeToChangelogFile: false
+    changeSet:
+      id: V001_create_task_types_table
+      author: d.s.samusev
+
+  - include:
+      file: db/changelog/sql/V002_create_tasks_table.sql
+      relativeToChangelogFile: false
+    changeSet:
+      id: V002_create_tasks_table
+      author: d.s.samusev
+
+  - include:
+      file: db/changelog/sql/V003_insert_into_task_types.sql
+      relativeToChangelogFile: false
+    changeSet:
+      id: V003_insert_into_task_types
+      author: d.s.samusev
