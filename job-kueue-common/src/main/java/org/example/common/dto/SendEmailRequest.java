@@ -5,8 +5,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class SendEmailRequest {
 
     @NotBlank(message = "Поле recipient_email не может быть пустым")

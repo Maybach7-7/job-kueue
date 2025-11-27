@@ -17,3 +17,13 @@ services:
     depends_on:
       - database
     restart: unless-stopped
+
+  kafka:
+    build:
+      context: ./job-kueue-kafka
+      dockerfile: Dockerfile
+    container_name: kafka-broker
+    ports:
+      - "9092:9092"
+    volumes:
+      - ./kafka_data:/opt/kafka/data
