@@ -1,3 +1,4 @@
 rootProject.name = 'job-kueue'
 include 'job-kueue-client'
 include 'job-kueue-common'
+include 'job-kueue-worker'
