@@ -19,7 +19,7 @@ import java.util.Map;
 public class KafkaConsumerConfig {
 
     @Bean
-    public ConsumerFactory<String, TaskRequest> taskRequestConsumerFactory() {
+    public ConsumerFactory<String, TaskRequest<?>> taskRequestConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -31,9 +31,20 @@ public class KafkaConsumerConfig {
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new JsonDeserializer<>(TaskRequest.class));
     }
 
+//    @Bean
+//    public ConsumerFactory<String, TaskRequest<?>> consumerFactory() {
+//        Map<String, Object> configProps = new HashMap<>();
+//        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+//        configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+//        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+//        configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "org.example.common"); // Укажи пакеты, где находятся твои классы
+//        configProps.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, "true"); // Важно!
+//        return new DefaultKafkaConsumerFactory<>(configProps);
+//    }
+
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, TaskRequest> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, TaskRequest> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, TaskRequest<?>> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, TaskRequest<?>> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(taskRequestConsumerFactory());
         return factory;

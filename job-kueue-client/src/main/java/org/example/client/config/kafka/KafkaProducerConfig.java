@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import java.util.Map;
 public class KafkaProducerConfig {
 
     @Bean
-    public ProducerFactory<String, TaskRequest> taskRequestProducerFactory() {
+    public ProducerFactory<String, TaskRequest<?>> taskRequestProducerFactory() {
         Map<String, Object> configProps = new HashMap<>();
 
         configProps.put(
@@ -29,12 +30,13 @@ public class KafkaProducerConfig {
         configProps.put(
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 JsonSerializer.class);
+        configProps.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, "true");
 
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
     @Bean
-    public KafkaTemplate<String, TaskRequest> taskRequestKafkaTemplate() {
+    public KafkaTemplate<String, TaskRequest<?>> taskRequestKafkaTemplate() {
         return new KafkaTemplate<>(taskRequestProducerFactory());
     }
 }

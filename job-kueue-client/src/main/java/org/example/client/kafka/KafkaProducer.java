@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KafkaProducer {
 
-    private final KafkaTemplate<String, TaskRequest> kafkaTemplate;
+    private final KafkaTemplate<String, TaskRequest<?>> kafkaTemplate;
 
-    public void sendJsonObject(String topic, TaskRequest jsonObject) {
+    public void sendJsonObject(String topic, TaskRequest<?> jsonObject) {
         kafkaTemplate.send(topic, jsonObject);
     }
 }

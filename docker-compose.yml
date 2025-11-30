@@ -19,9 +19,7 @@ services:
     restart: unless-stopped
 
   kafka:
-    build:
-      context: ./job-kueue-kafka
-      dockerfile: Dockerfile
+    image: apache/kafka:4.1.1
     container_name: kafka-broker
     ports:
       - "9092:9092"
