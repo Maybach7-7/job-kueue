@@ -7,6 +7,20 @@ services:
       - "5432:5432"
     restart: unless-stopped
 
+  kafka:
+    image: apache/kafka:4.1.1
+    container_name: kafka-broker
+    ports:
+      - "9092:9092"
+    depends_on:
+      - database
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+    volumes:
+      - ./kafka_data:/opt/kafka/data
+
   api-client:
     build:
       context: .
@@ -16,12 +30,17 @@ services:
       - "8080:8080"
     depends_on:
       - database
+      - kafka
     restart: unless-stopped
 
-  kafka:
-    image: apache/kafka:4.1.1
-    container_name: kafka-broker
-    ports:
-      - "9092:9092"
-    volumes:
-      - ./kafka_data:/opt/kafka/data
+  worker:
+    build:
+      context: .
+      dockerfile: ./job-kueue-worker/Dockerfile
+    depends_on:
+      - database
+      - kafka
+      - api-client
+    deploy:
+      mode: replicated
+      replicas: 3
