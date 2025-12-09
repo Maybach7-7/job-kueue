@@ -19,7 +19,7 @@ public class SendEmailService {
         message.setTo(sendEmailRequest.getRecipientEmail());
         message.setSubject(sendEmailRequest.getSubject());
         message.setText(sendEmailRequest.getBody());
-        message.setFrom("d.s.samusev@gmail.com");
+        message.setFrom("samusevdenis7@yandex.ru");
 
         log.info("Происходит отправка email на адрес: " + sendEmailRequest.getRecipientEmail());
 //        try {
