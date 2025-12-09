@@ -1,5 +1,6 @@
 package org.example.client.service;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class SendEmailService {
     private final TaskService taskService;
 
     @Transactional
-    public void processRequest(@Valid SendEmailRequest sendEmailRequest) {
+    public Integer processRequest(@Valid SendEmailRequest sendEmailRequest) {
         log.info("Начало обработки запроса для sendEmailRequest: " + sendEmailRequest);
 
         Task newTask = taskService.createTask(TaskTypeEnum.SEND_EMAIL);
@@ -37,5 +38,6 @@ public class SendEmailService {
         log.info("Отправка объекта taskRequest в кафка");
         kafkaProducer.sendJsonObject(TASKS_TOPIC, taskRequest);
         log.info("Объект отправлен в kafka");
+        return newTask.getId();
     }
 }

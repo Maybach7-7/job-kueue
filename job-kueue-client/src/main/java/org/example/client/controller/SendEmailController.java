@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SendEmailController {
 
     public static final String SEND_EMAIL = "/task/send_email";
-    public static final String GET_TASK_BY_ID = "/task/send_email/{id}";
+    public static final String GET_TASK_BY_ID = "/task/{id}";
 
     private final SendEmailService sendEmailService;
     private final TaskService taskService;
@@ -40,9 +43,14 @@ public class SendEmailController {
     })
     @PostMapping(SEND_EMAIL)
     public ResponseEntity<Void> sendEmail(@RequestBody @Valid SendEmailRequest sendEmailRequest) {
-        sendEmailService.processRequest(sendEmailRequest);
+        var taskId =  sendEmailService.processRequest(sendEmailRequest);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/task/{id}")
+                .buildAndExpand(taskId)
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
     @Operation(summary = "Получить задачу по ID", description = "Возвращает информацию о задаче по её идентификатору")
