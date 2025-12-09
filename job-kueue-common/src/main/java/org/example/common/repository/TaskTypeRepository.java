@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TaskTypeRepository extends JpaRepository<TaskType, Integer> {
-    TaskType findByName(String name);
+    TaskType findByTypeName(String name);
 }

@@ -6,20 +6,40 @@ services:
     ports:
       - "5432:5432"
     restart: unless-stopped
+    networks:
+      - app-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    restart: unless-stopped
+    networks:
+      - app-network
 
   kafka:
-    image: apache/kafka:4.1.1
-    container_name: kafka-broker
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
     ports:
       - "9092:9092"
-    depends_on:
-      - database
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-    volumes:
-      - ./kafka_data:/opt/kafka/data
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    restart: unless-stopped
+    networks:
+      - app-network
 
   api-client:
     build:
@@ -31,7 +51,12 @@ services:
     depends_on:
       - database
       - kafka
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/job-kueue-db
     restart: unless-stopped
+    networks:
+      - app-network
 
   worker:
     build:
@@ -41,6 +66,15 @@ services:
       - database
       - kafka
       - api-client
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/job-kueue-db
     deploy:
       mode: replicated
       replicas: 3
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

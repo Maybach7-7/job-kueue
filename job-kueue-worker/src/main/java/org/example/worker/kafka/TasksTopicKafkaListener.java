@@ -17,6 +17,6 @@ public class TasksTopicKafkaListener {
     @KafkaListener(topics = "tasks", groupId = "worker-group")
     public void listenTasksTopic(TaskRequest<?> taskRequest) {
         log.info("Получено сообщение из топика tasks: " + taskRequest);
-        workerService.processMessage(taskRequest);
+        workerService.startHandlingTask(taskRequest);
     }
 }

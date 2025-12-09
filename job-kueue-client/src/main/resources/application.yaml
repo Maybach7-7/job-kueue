@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/job-kueue-db
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://database:5432/job-kueue-db}
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -12,9 +12,14 @@ spring:
       ddl-auto: validate
     show-sql: true
   liquibase:
-    url: jdbc:postgresql://localhost:5432/job-kueue-db
+    url: jdbc:postgresql://database:5432/job-kueue-db
     enabled: true
     user: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
     change-log: db/changelog/db.changelog-master.yml
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+
+# Для локального запуска используйте профиль 'local':
+# java -jar job-kueue-client.jar --spring.profiles.active=local

@@ -3,6 +3,7 @@ package org.example.common.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.ToString;
@@ -16,7 +17,7 @@ public class SendEmailRequest {
     @JsonProperty("recipient_email")
     private String recipientEmail;
 
-    @NotBlank(message = "Поле subject не может быть пустым")
+    @NotNull(message = "Поле subject должно присутствовать в запросе")
     @Size(max = 255, message = "Тема письма не должна превышать 255 символов")
     @JsonProperty("subject")
     private String subject;

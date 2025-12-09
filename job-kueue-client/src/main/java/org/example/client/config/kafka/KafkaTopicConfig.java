@@ -10,6 +10,6 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic tasks() {
-        return TopicBuilder.name("tasks").build();
+        return TopicBuilder.name("tasks").partitions(3).build();
     }
 }

@@ -24,7 +24,7 @@ public class Task {
     private TaskType taskType;
 
     @ManyToOne
-    @JoinColumn(name = "task_status_id", nullable = false)
+    @JoinColumn(name = "task_status_id", nullable = false, unique = true)
     private TaskStatus taskStatus;
 
     @Column(name = "created_time")

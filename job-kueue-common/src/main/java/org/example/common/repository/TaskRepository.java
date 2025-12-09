@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Integer> {
 
@@ -16,4 +18,17 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Transactional
     @Query("update Task t SET t.taskStatus = :newStatus WHERE t.id = :taskId")
     void updateStatus(@Param("taskId") Integer taskId, @Param("newStatus") TaskStatus newStatus);
+
+    @Modifying
+    @Transactional
+    @Query("update Task t SET t.startTime = CURRENT_TIMESTAMP WHERE t.id = :taskId")
+    void updateStartTime(@Param("taskId") Integer taskId);
+
+    @Modifying
+    @Transactional
+    @Query("update Task t SET t.endTime = CURRENT_TIMESTAMP WHERE t.id = :taskId")
+    void updateEndTime(@Param("taskId") Integer taskId);
+
+    @Query("SELECT t FROM Task t JOIN FETCH t.taskType JOIN FETCH t.taskStatus WHERE t.id = :id")
+    Optional<Task> findByIdWithDetails(@Param("id") Integer id);
 }
